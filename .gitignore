@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+build/
+dist/
+
+# Project
+output/
+input/*
+!input/.gitkeep
+
+output/*
+!output/.gitkeep
+
+# Build
+build/
+dist/
+
+# Project data
+input/*
+!input/.gitkeep
+
+output/*
+!output/.gitkeep
