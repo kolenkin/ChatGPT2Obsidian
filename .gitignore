@@ -23,17 +23,10 @@ Thumbs.db
 build/
 dist/
 
-# Project
-output/
-input/*
-!input/.gitkeep
-
-output/*
-!output/.gitkeep
-
-# Build
-build/
-dist/
+# Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Project data
 input/*
