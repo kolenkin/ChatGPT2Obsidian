@@ -1,0 +1,1 @@
+# ChatGPT2Obsidian UI package

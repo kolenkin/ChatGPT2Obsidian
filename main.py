@@ -8,7 +8,18 @@ def main():
 
     writer = MarkdownWriter()
 
-    writer.save_conversation(conversations[0])
+    exported = 0
+
+    for conversation in conversations:
+        try:
+            writer.save_conversation(conversation)
+            exported += 1
+        except Exception as e:
+            print(f"ERROR: {conversation.title}")
+            print(e)
+
+    print()
+    print(f"Exported {exported} conversations.")
 
 
 if __name__ == "__main__":

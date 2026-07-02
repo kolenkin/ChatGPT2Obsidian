@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from .models import Conversation, Message
+
 
 class ChatParser:
 
@@ -9,7 +11,52 @@ class ChatParser:
 
     def load(self):
 
-        with open(self.filename, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        with self.filename.open("r", encoding="utf-8") as f:
+            raw = json.load(f)
 
-        return data
+        conversations = []
+
+        for chat in raw:
+
+            conversation = Conversation(
+                id=chat.get("id", ""),
+                title=chat.get("title", "Untitled"),
+            )
+
+            mapping = chat.get("mapping", {})
+
+            for node in mapping.values():
+
+                message = node.get("message")
+
+                if not message:
+                    continue
+
+                content = message.get("content", {})
+
+                if content.get("content_type") != "text":
+                    continue
+
+                parts = content.get("parts", [])
+
+                if not parts:
+                    continue
+
+                text = "\n".join(
+                    str(part)
+                    for part in parts
+                    if part
+                )
+
+                role = message.get("author", {}).get("role", "unknown")
+
+                conversation.messages.append(
+                    Message(
+                        role=role,
+                        text=text,
+                    )
+                )
+
+            conversations.append(conversation)
+
+        return conversations

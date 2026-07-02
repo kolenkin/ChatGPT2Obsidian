@@ -1,16 +1,19 @@
 from pathlib import Path
 
+from .models import Conversation
+
 
 class MarkdownWriter:
-    def __init__(self, output_dir: str = "output"):
+
+    def __init__(self, output_dir="output"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
 
-    def save_conversation(self, conversation: dict) -> None:
-        title = conversation.get("title") or "Untitled"
+    def save_conversation(self, conversation: Conversation):
 
         safe_name = "".join(
-            c for c in title
+            c
+            for c in conversation.title
             if c not in r'<>:"/\|?*'
         ).strip()
 
@@ -23,41 +26,16 @@ class MarkdownWriter:
             f.write("imported: true\n")
             f.write("---\n\n")
 
-            f.write(f"# {title}\n\n")
+            f.write(f"# {conversation.title}\n\n")
 
-            mapping = conversation["mapping"]
+            for message in conversation.messages:
 
-            for node in mapping.values():
-
-                message = node.get("message")
-
-                if not message:
-                    continue
-
-                content = message.get("content", {})
-
-                if content.get("content_type") != "text":
-                    continue
-
-                parts = content.get("parts", [])
-
-                if not parts:
-                    continue
-
-                author = message.get("author", {}).get("role", "unknown")
-
-                if author == "user":
+                if message.role == "user":
                     f.write("## 👤 User\n\n")
                 else:
                     f.write("## 🤖 ChatGPT\n\n")
 
-                text = "\n".join(
-                    str(part)
-                    for part in parts
-                    if part
-                )
-
-                f.write(text)
+                f.write(message.text)
                 f.write("\n\n---\n\n")
 
         print(f"Saved: {path}")
